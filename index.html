@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Botón de Registrar arriba del título -->
+        <button id="registerButton" class="register-button">Registrar</button>
+        <h1 class="title">ZAPATERIA LA MERA UT'Z</h1> 
+        <form id="loginForm">
+            <input type="text" id="username" name="username" placeholder="Usuario" required>
+            <input type="password" id="password" name="password" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+    </div>
+
+    <!-- Modal para la contraseña de acceso -->
+    <div id="passwordModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Ingrese la Contraseña de Acceso</h2>
+            <input type="password" id="accessPassword" placeholder="Contraseña" required>
+            <button id="confirmPassword">Confirmar</button>
+        </div>
+    </div>
+
+    <script>
+        // Muestra el modal al hacer clic en el botón Registrar
+        document.getElementById('registerButton').addEventListener('click', function () {
+            document.getElementById('passwordModal').style.display = 'block';
+        });
+
+        // Cierra el modal cuando se hace clic en el botón de cerrar
+        document.querySelector('.close').addEventListener('click', function () {
+            document.getElementById('passwordModal').style.display = 'none';
+        });
+
+        // Verifica la contraseña de acceso y redirige a la página de registro si es correcta
+        document.getElementById('confirmPassword').addEventListener('click', function () {
+            const accessPassword = document.getElementById('accessPassword').value;
+            if (accessPassword === 'contra1234') {
+                alert('Acceso concedido');
+                document.getElementById('passwordModal').style.display = 'none'; // Cerrar el modal
+                window.location.href = 'register.html'; // Redirigir a la página de registro
+            } else {
+                alert('Contraseña incorrecta');
+            }
+        });
+
+        // Maneja el envío del formulario de login
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevenir el envío del formulario por defecto
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            fetch('/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Login exitoso');
+                    window.location.href = 'erp.html'; // Redirigir a la página después de iniciar sesión
+                } else {
+                    alert('Usuario o contraseña incorrectos');
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        });
+    </script>
+</body>
+</html>
+
+</html>
